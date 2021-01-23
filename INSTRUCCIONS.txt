@@ -1,0 +1,42 @@
+[-] dies1.txt es des de 1 Abril 2020
+
+https://dadescovid.cat/critics
+	[+] uci.txt només contempla des de 1 Abril 2020
+
+https://dadescovid.cat/diari
+	[-] defuncions.txt	COLUMNA 8
+		per fer la suma total:
+			awk '{sum += $1} END {print sum}' defuncions.txt
+	[-] ingressats.txt	COLUMNA 7
+
+
+
+codi Python3
+
+from bs4 import BeautifulSoup as BS
+import requests
+
+uci = requests.get('https://dadescovid.cat/critics').text
+sopa = BS(uci, "lxml")
+
+fitxer = open("/home/jordi/Github/CORONAVIRUS/dadescovid/uci.txt","a+")
+for i in range(len(sopa.findAll('td', class_="titol_fila"))-1,-1,-1):
+	fitxer.write(sopa.findAll('td', class_="total_fila")[i].text.replace('.',''))
+	fitxer.write("\n")
+fitxer.close()
+
+diari = requests.get('https://dadescovid.cat/diari').text
+sopa = BS(diari, "lxml")
+
+fitxer = open("/home/jordi/Github/CORONAVIRUS/dadescovid/defuncions.txt","a+")
+for i in range(len(sopa.findAll('tr'))-1,0,-1):
+	fitxer.write(sopa.findAll('tr')[i].findAll('td')[8].text.replace('.',''))
+	fitxer.write("\n")
+fitxer.close()
+
+fitxer = open("/home/jordi/Github/CORONAVIRUS/dadescovid/ingressats.txt","a+")
+for i in range(len(sopa.findAll('tr'))-1,0,-1):
+	fitxer.write(sopa.findAll('tr')[i].findAll('td')[7].text.replace('.',''))
+	fitxer.write("\n")
+fitxer.close()
+
